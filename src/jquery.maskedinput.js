@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Masked Input plugin for jQuery
 	Copyright (c) 2007-2010 Josh Bush (digitalbush.com)
 	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license) 
@@ -72,7 +72,7 @@
 					len--;
 					partialPosition = i;
 				} else if (defs[c]) {
-					tests.push(new RegExp(defs[c]));
+					tests.push((defs[c].test) ? defs[c] : new RegExp(defs[c])); // (See if the def already has a test function defined)
 					if(firstNonMaskPos==null)
 						firstNonMaskPos =  tests.length - 1;
 				} else {
@@ -82,7 +82,7 @@
 
 			return this.each(function() {
 				var input = $(this);
-				var buffer = $.map(mask.split(""), function(c, i) { if (c != '?') return defs[c] ? settings.placeholder : c });
+				var buffer = $.map(mask.split(""), function(c, i) { if (c != '?') return (defs[c] ? (defs[c].placeholder || settings.placeholder) : c); });
 				var ignore = false;  			//Variable for ignoring control keys
 				var focusText = input.val();
 
@@ -97,7 +97,7 @@
 					while (!tests[pos] && --pos >= 0);
 					for (var i = pos; i < len; i++) {
 						if (tests[i]) {
-							buffer[i] = settings.placeholder;
+							buffer[i] = tests[i].placeholder || settings.placeholder;
 							var j = seekNext(i);
 							if (j < len && tests[i].test(buffer[j])) {
 								buffer[i] = buffer[j];
@@ -110,11 +110,11 @@
 				};
 
 				function shiftR(pos) {
-					for (var i = pos, c = settings.placeholder; i < len; i++) {
+					for (var i = pos, c = null; i < len; i++) {
 						if (tests[i]) {
 							var j = seekNext(i);
 							var t = buffer[i];
-							buffer[i] = c;
+							buffer[i] = c || tests[i].placeholder || settings.placeholder;
 							if (j < len && tests[j].test(t))
 								c = t;
 							else
@@ -176,7 +176,7 @@
 				function clearBuffer(start, end) {
 					for (var i = start; i < end && i < len; i++) {
 						if (tests[i])
-							buffer[i] = settings.placeholder;
+							buffer[i] = tests[i].placeholder || settings.placeholder;
 					}
 				};
 
@@ -188,7 +188,7 @@
 					var lastMatch = -1;
 					for (var i = 0, pos = 0; i < len; i++) {
 						if (tests[i]) {
-							buffer[i] = settings.placeholder;
+							buffer[i] = tests[i].placeholder || settings.placeholder;
 							while (pos++ < test.length) {
 								var c = test.charAt(pos - 1);
 								if (tests[i].test(c)) {
