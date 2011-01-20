@@ -1,0 +1,36 @@
+<html>
+<head>
+<title> jQuery NumberField Demo </title>
+<script src="../lib/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../src/jquery.maskedinput-custom.js" type="text/javascript"></script>
+<script src="../src/jquery.toNumberField.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function() {
+        $("input").val("987654.321");
+
+        $("#number1").toNumberField("#");
+        $("#number2").toNumberField("#", 4);
+        $("#number3").toNumberField("#", 4, true);
+        $("#currency").toDollarField(2);
+        $("#pct").toPercentField(1);
+
+        $("input").blur(function() {
+            $("#info").html("Unmasked value: " + $(this).mask());
+        }).dblclick(function() {
+            $(this).unmask();
+        });
+    });
+	
+</script>
+</head>
+<body>
+<table>
+		<tr><td>Number (no decimal place)</td><td><input id="number1" type="text" /></td><td>99,999</td></tr>
+		<tr><td>Number (4 decimal places)</td><td><input id="number2" type="text" /></td><td>99,999.9999</td></tr>
+		<tr><td>Number (4 filled decimal places)</td><td><input id="number3" type="text" /></td><td>99,999.0000</td></tr>
+		<tr><td>Currency</td><td><input id="currency" type="text" /></td><td>$99,999.99</td></tr>
+		<tr><td>Percent</td><td><input id="pct" type="text" /></td><td>99.9%</td></tr>
+</table>
+<div id="info"></div>
+</body>
+</html>

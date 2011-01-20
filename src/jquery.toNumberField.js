@@ -1,13 +1,16 @@
-﻿(function($) {
+﻿/// <reference path="jquery.maskedinput-custom.js" />
+(function($) {
     
     $.fn.extend({
-        toDollarField: function(decimals, min, max) {
+        toNumberField: function(mask, decimals, fillDecimals, min, max) {
             // ToDo: implement min, max
-            return this.mask("$#", {decimals:decimals, createBuffer: createNumberBuffer, fillDecimals: true});
+            return this.mask(mask || "#", {decimals:decimals, createBuffer: createNumberBuffer, fillDecimals: fillDecimals});
         },
-        toPercentField: function(decimals, min, max) {
-            // ToDo: implement min, max
-            return this.mask("#%", {decimals:decimals, createBuffer: createNumberBuffer, fillDecimals: true});
+        toDollarField: function(decimals, fillDecimals, min, max) {
+            return this.toNumberField("$#", decimals, fillDecimals, min, max);
+        },
+        toPercentField: function(decimals, fillDecimals, min, max) {
+            return this.toNumberField("#%", decimals, fillDecimals, min, max);
         }
     });
     
@@ -30,7 +33,7 @@
 
         function formatBuffer(cpos) {
             var coff = 0; // caret offset
-            var maxDecim = settings.decimals == undefined ? 0 : settings.decimals;
+            var maxDecim = settings.decimals || 0;
             var decim = null; // Decimal place
             // Extract all valid characters:
             var digits = [];
@@ -39,7 +42,7 @@
                     digits.push(buffer[i]);
                 } else if (decim == null && buffer[i] == ".") {
                     decim = digits.length;
-                    if (settings.fillDecimals && (maxDecim > 0))
+                    if (maxDecim > 0)
                         digits.push(".");
                 }
                 else if (cpos > i)

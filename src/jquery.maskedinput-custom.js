@@ -217,13 +217,11 @@
         mask: function (mask, settings) {
             // If "mask(false)" or no parameters were supplied, return the value without the mask:
             if (!mask && this.length > 0) {
-                var input = $(this[0]);
-                return input.data("buffer").getText(true);
+                return $(this[0]).data("buffer").getText(true);
             }
             // If "mask(true)" was called, let's update the text:
             if (mask === true) {
-                var input = $(this[0]);
-                return input.data("buffer").checkVal();
+                return $(this[0]).data("buffer").checkVal();
             }
 
             // Default settings:
