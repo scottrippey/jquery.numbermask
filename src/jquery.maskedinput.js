@@ -11,9 +11,14 @@
 	$.mask = {
 		//Predefined character definitions
 		definitions: {
-			'9': "[0-9]",
-			'a': "[A-Za-z]",
-			'*': "[A-Za-z0-9]"
+			'9': /[0-9]/,
+			'a': /[A-Za-z]/,
+			'*': /[A-Za-z0-9]/,
+            add: function(key, pattern, placeholder) {
+                if (typeof pattern === 'string') pattern = new RegExp(pattern);
+                pattern.placeholder = placeholder;
+                this[key] = pattern;
+            }
 		}
 	};
 
@@ -152,7 +157,7 @@
 					var k = e.charCode || e.keyCode || e.which;
 					var pos = $(this).caret();
 
-					if (e.ctrlKey || e.altKey || e.metaKey) {//Ignore
+					if (e.ctrlKey || e.altKey || e.metaKey || e.charCode === 0) {//Ignore
 						return true;
 					} else if ((k >= 32 && k <= 125) || k > 186) {//typeable characters
 						var p = seekNext(pos.begin - 1);
