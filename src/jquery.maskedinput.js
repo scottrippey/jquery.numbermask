@@ -25,7 +25,6 @@
 				end = (typeof end == 'number') ? end : begin;
 				return this.each(function() {
 					if (this.setSelectionRange) {
-						this.focus();
 						this.setSelectionRange(begin, end);
 					} else if (this.createTextRange) {
 						var range = this.createTextRange();
@@ -226,12 +225,13 @@
 						focusText = input.val();
 						var pos = checkVal();
 						writeBuffer();
-						setTimeout(function() {
+						var moveCaret = function() {
 							if (pos == mask.length)
 								input.caret(0, pos);
 							else
 								input.caret(pos);
-						}, 0);
+						};
+                        $.browser.msie ? moveCaret() : setTimeout(moveCaret,0);
 					})
 					.bind("blur.mask", function() {
 						checkVal();
